@@ -3,7 +3,6 @@ package com.andredevel.algasensors.temperature.monitoring.api.controller;
 import com.andredevel.algasensors.temperature.monitoring.api.model.TemperatureLogOutput;
 import com.andredevel.algasensors.temperature.monitoring.domain.model.SensorId;
 import com.andredevel.algasensors.temperature.monitoring.domain.model.TemperatureLog;
-import com.andredevel.algasensors.temperature.monitoring.domain.model.TemperatureLogId;
 import com.andredevel.algasensors.temperature.monitoring.domain.repository.TemperatureLogRepository;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/temperatures")
