@@ -1,5 +1,6 @@
 package com.andredevel.algasensors.temperature.monitoring.infrastructure.rabbitmq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.ExchangeBuilder;
@@ -8,12 +9,21 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    
+
+    public static final String QUEUE_NAME = "temperature-monitoring.process-temperature.v1.q";
+
+    // Se passar o ObjectMapper como parâmetro, o Spring irá injetar o bean já configurado (Rest api)
+    @Bean
+    public Jackson2JsonMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
+    }
+
     // Necessário para criação exchange e queues
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
@@ -23,7 +33,7 @@ public class RabbitMQConfig {
     // Configuração da queue
     @Bean
     public Queue queue() {
-        return QueueBuilder.durable("temperature-monitoring.process-temperature.v1.q").build();
+        return QueueBuilder.durable(QUEUE_NAME).build();
     }
     
     // Configuração da exchange
