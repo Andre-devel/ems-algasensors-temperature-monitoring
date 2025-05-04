@@ -20,7 +20,7 @@ public class RabbitMQListener {
     
     private final TemperatureMonitoringService temperatureMonitoringService;
     
-    @RabbitListener(queues = QUEUE_NAME)
+    @RabbitListener(queues = QUEUE_NAME, concurrency = "2-3")
     public void handle(@Payload TemperatureLogData temperatureLogData) {
         
         temperatureMonitoringService.processTemperatureReading(temperatureLogData);
