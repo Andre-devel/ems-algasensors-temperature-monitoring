@@ -16,8 +16,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME = "temperature-monitoring.process-temperature.v1.q";
-
+    public static final String QUEUE_PROCESS_TEMPERATURE = "temperature-monitoring.process-temperature.v1.q";
+    public static final String QUEUE_ALERTING = "temperature-monitoring.process-temperature.v1.q";
+    
     // Se passar o ObjectMapper como parâmetro, o Spring irá injetar o bean já configurado (Rest api)
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
@@ -32,8 +33,14 @@ public class RabbitMQConfig {
     
     // Configuração da queue
     @Bean
-    public Queue queue() {
-        return QueueBuilder.durable(QUEUE_NAME).build();
+    public Queue queueProcessTemperature() {
+        return QueueBuilder.durable(QUEUE_PROCESS_TEMPERATURE).build();
+    }
+
+    // Configuração da queue
+    @Bean
+    public Queue queueAlerting() {
+        return QueueBuilder.durable(QUEUE_ALERTING).build();
     }
     
     // Configuração da exchange
@@ -42,8 +49,13 @@ public class RabbitMQConfig {
     }
     
     @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(queue()).to(exchange());
+    public Binding bindingProcessTemperature() {
+        return BindingBuilder.bind(queueProcessTemperature()).to(exchange());
+    }
+
+    @Bean
+    public Binding bindingAlerting() {
+        return BindingBuilder.bind(queueAlerting()).to(exchange());
     }
     
     
