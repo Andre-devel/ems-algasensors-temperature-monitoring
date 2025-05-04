@@ -1,6 +1,7 @@
 package com.andredevel.algasensors.temperature.monitoring.infrastructure.rabbitmq;
 
 import com.andredevel.algasensors.temperature.monitoring.api.model.TemperatureLogData;
+import com.andredevel.algasensors.temperature.monitoring.domain.service.TemperatureMonitoringService;
 import static com.andredevel.algasensors.temperature.monitoring.infrastructure.rabbitmq.RabbitMQConfig.QUEUE_NAME;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RabbitMQListener {
     
+    private final TemperatureMonitoringService temperatureMonitoringService;
+    
     @RabbitListener(queues = QUEUE_NAME)
-    public void handle(@Payload TemperatureLogData temperatureLogData,
-                       @Headers Map<String, Object> headers) {
-        TSID sensorId = temperatureLogData.getSensorId();
-        Double temperature = temperatureLogData.getValue();
+    public void handle(@Payload TemperatureLogData temperatureLogData) {
         
-        log.info(String.format("Temperature updated: sensorId %s Temp %s", sensorId, temperature));
-        log.info(String.format("Headers: %s", headers));
+        temperatureMonitoringService.processTemperatureReading(temperatureLogData);
     }
 }
